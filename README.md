@@ -6,7 +6,26 @@ Production environment uses nginx as a reverse proxy to enable SSL
 
 ## Installation
 
-Make sure you have `docker` and `docker-compose` installed.
+Make sure you have `python3` and `pip` installed.
+
+In the `source/` directory, create and activate virtual environment using virtualenv
+```bash
+$ python -m venv python3-virtualenv
+$ source python3-virtualenv/bin/activate
+```
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install all dependencies!
+
+```bash
+# To install the current requirments listed in requirements.txt
+$ pip install -r requirements.txt
+
+# To pip install the latest Flask requirements and save to requirements.txt
+$ pip install flask
+$ pip freeze > requirements.txt
+```
+
+Finally, make sure you have `docker` and `docker-compose` installed.
 
 ## Usage
 
