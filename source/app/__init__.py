@@ -7,6 +7,8 @@ from peewee import *
 from playhouse.shortcuts import model_to_dict
 import re
 import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # APP INITIALIZATION
 load_dotenv()
@@ -93,11 +95,44 @@ def contact():
             return render_template("contact.html", error_statement=error_statement, firstname=firstname, lastname=lastname, email=email)
         else:
             success_statement = "Thank you! We will be in contact with you shortly..."
-            message = """Thank you for contacting us! We will be reaching out to you as soon as possible!"""
+            message = MIMEMultipart("alternative")
+            message["Subject"] = "Contact Requested"
+            message["From"] = SMTP_EMAIL
+            message["To"] = email
+
+            # Create the plain-text and HTML version of your message
+            text = """\
+            Hi,
+            Thank you for reaching out!
+            We will be with you shortly.
+            """
+            html = """\
+            <html>
+            <body>
+                <p>Hi,<br>
+                Thank you for reaching out!<br>
+                We will with you shortly.
+                </p>
+            </body>
+            </html>
+            """
+
+            # Turn these into plain/html MIMEText objects
+            part1 = MIMEText(text, "plain")
+            part2 = MIMEText(html, "html")
+
+            # Add HTML/plain-text parts to MIMEMultipart message
+            # The email client will try to render the last part first
+            message.attach(part1)
+            message.attach(part2)
+
+            # Create secure connection with SMTP provider and send email
             server = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
             server.starttls()
             server.login(SMTP_EMAIL, SMTP_PASSWORD)
-            server.sendmail(SMTP_EMAIL, email, message)
+            server.sendmail(SMTP_EMAIL, email, message.as_string())
+
+            # Create database entry of contact
             Contact.create(firstname=firstname, lastname=lastname, email=email)
             return render_template("contact.html", success_statement=success_statement, firstname=firstname, lastname=lastname, email=email)
     else:
