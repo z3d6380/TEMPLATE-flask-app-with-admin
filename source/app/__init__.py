@@ -102,20 +102,20 @@ def contact():
 
             # Create the plain-text and HTML version of your message
             text = """\
-            Hi,
+            Hi {name},
             Thank you for reaching out!
             We will be with you shortly.
-            """
+            """.format(name=firstname)
             html = """\
             <html>
             <body>
-                <p>Hi,<br>
+                <p>Hi <strong>{name}</strong>,<br>
                 Thank you for reaching out!<br>
                 We will with you shortly.
                 </p>
             </body>
             </html>
-            """
+            """.format(name=firstname)
 
             # Turn these into plain/html MIMEText objects
             part1 = MIMEText(text, "plain")
