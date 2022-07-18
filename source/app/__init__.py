@@ -2,17 +2,13 @@
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
 from playhouse.shortcuts import model_to_dict
-import re
 from .database import *
+from .regex import *
 from .smtp import *
 
 # APP INITIALIZATION
 load_dotenv()
 app = Flask(__name__)
-
-# REGULAR EXPRESSIONS
-email_re = re.compile(r"([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\"([]!#-[^-~ \t]|(\\[\t -~]))+\")@([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|\[[\t -Z^-~]*])")
-
 
 # APP HOOKS
 db = database.db
@@ -51,7 +47,7 @@ def contact():
         if not firstname or not lastname or not email:
             error_statement = "All form fields required..."
             return render_template("contact.html", error_statement=error_statement, firstname=firstname, lastname=lastname, email=email)
-        elif not re.fullmatch(email_re, email):
+        elif not re.fullmatch(regex.email_re, email):
             error_statement = "Email format invalid..."
             return render_template("contact.html", error_statement=error_statement, firstname=firstname, lastname=lastname, email=email)
         else:
