@@ -5,7 +5,7 @@
 # Description: Contains all SMTP settings and methods for use with Flask App
 
 # IMPORTS
-import os
+from os import getenv
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart

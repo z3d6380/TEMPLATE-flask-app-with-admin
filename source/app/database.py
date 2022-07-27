@@ -6,7 +6,7 @@
 
 # IMPORTS
 import datetime
-import os
+from os import getenv
 from peewee import *
 
 # DATABASE SETTINGS
